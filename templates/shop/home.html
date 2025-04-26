@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="hero-slide d-flex align-items-center" style="background: linear-gradient(to right, #1a237e, #0071e3);">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <div class="hero-content text-white">
+                                        <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInUp">ค้นพบสมาร์ทโฟนรุ่นล่าสุด</h1>
+                                        <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">สำรวจสมาร์ทโฟนคุณภาพสูงรุ่นใหม่ล่าสุดพร้อมเทคโนโลยีและการออกแบบที่ทันสมัย</p>
+                                        <a href="{% url 'product_list' %}" class="btn btn-light btn-lg px-4 animate__animated animate__fadeInUp animate__delay-2s">ช้อปเลย</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 d-none d-lg-block">
+                                    <img src="https://images.pexels.com/photos/1447254/pexels-photo-1447254.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" class="img-fluid rounded animate__animated animate__fadeIn animate__delay-1s" alt="Latest Smartphones">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="hero-slide d-flex align-items-center" style="background: linear-gradient(to right, #311b92, #6200ea);">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <div class="hero-content text-white">
+                                        <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInUp">ข้อเสนอพิเศษจากแบรนด์ชั้นนำ</h1>
+                                        <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">รับส่วนลดพิเศษสำหรับสมาร์ทโฟนจากผู้ผลิตชั้นนำ</p>
+                                        <a href="{% url 'product_list' %}" class="btn btn-light btn-lg px-4 animate__animated animate__fadeInUp animate__delay-2s">ดูโปรโมชั่น</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 d-none d-lg-block">
+                                    <img src="https://images.pexels.com/photos/5082579/pexels-photo-5082579.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" class="img-fluid rounded animate__animated animate__fadeIn animate__delay-1s" alt="Mobile Phones Deals">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="hero-slide d-flex align-items-center" style="background: linear-gradient(to right, #004d40, #00897b);">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <div class="hero-content text-white">
+                                        <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInUp">อุปกรณ์เสริมคุณภาพสูง</h1>
+                                        <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">ยกระดับประสบการณ์การใช้งานด้วยอุปกรณ์เสริมคุณภาพสูงของเรา</p>
+                                        <a href="{% url 'product_list' %}" class="btn btn-light btn-lg px-4 animate__animated animate__fadeInUp animate__delay-2s">ดูเพิ่มเติม</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 d-none d-lg-block">
+                                    <img src="https://images.pexels.com/photos/3825517/pexels-photo-3825517.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" class="img-fluid rounded animate__animated animate__fadeIn animate__delay-1s" alt="Mobile Accessories">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+    
+    <!-- Featured Categories -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">หมวดหมู่สินค้า</h2>
+            <div class="row g-4">
+                {% for category in categories %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <a href="{% url 'category_detail' category.slug %}" class="text-decoration-none">
+                            <div class="category-card text-center p-4 rounded shadow-sm h-100 bg-light hover-scale">
+                                <div class="category-icon mb-3">
+                                    <i class="fas fa-mobile-alt fa-3x text-primary"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">{{ category.name }}</h5>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Brands -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5">แบรนด์ยอดนิยม</h2>
+            <div class="row g-4 justify-content-center align-items-center">
+                {% for brand in brands %}
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <div class="brand-card text-center p-3 bg-white rounded shadow-sm hover-elevate">
+                            {% if brand.logo %}
+                                <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" class="img-fluid" style="max-height: 50px;">
+                            {% else %}
+                                <h5 class="mb-0">{{ brand.name }}</h5>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Products -->
+    <section class="py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">สินค้าแนะนำ</h2>
+                <a href="{% url 'product_list' %}" class="btn btn-outline-primary">ดูทั้งหมด</a>
+            </div>
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://media-cdn.bnn.in.th/234752/iPhone_14_Pro_Gold_PDP_Image_Position-1A_Gold_1.jpg" alt="iPhone 14 Pro" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-danger text-white">10% ลด</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">Apple</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">iPhone 14 Pro</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿35,900</span>
+                                <span class="product-price-old text-muted text-decoration-line-through ms-2">฿39,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://media-cdn.bnn.in.th/269611/Samsung-Smartphone-Galaxy-S23-Ultra-Phantom-Black-5G-1-square_medium.jpg" alt="Samsung Galaxy S23" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-danger text-white">15% ลด</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">Samsung</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">Galaxy S23 Ultra</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿32,900</span>
+                                <span class="product-price-old text-muted text-decoration-line-through ms-2">฿38,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://ginkotown.store/cdn/shop/products/pixel7pro_1200x1200.jpg?v=1665854346" alt="Google Pixel 7" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-danger text-white">20% ลด</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">Google</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">Pixel 7 Pro</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿28,900</span>
+                                <span class="product-price-old text-muted text-decoration-line-through ms-2">฿35,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://media-cdn.bnn.in.th/278581/Xiaomi-13-Pro-Black-1.jpg" alt="Xiaomi 13" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-danger text-white">12% ลด</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">Xiaomi</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">Xiaomi 13 Pro</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿25,900</span>
+                                <span class="product-price-old text-muted text-decoration-line-through ms-2">฿29,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- New Arrivals -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">สินค้ามาใหม่</h2>
+                <a href="{% url 'product_list' %}" class="btn btn-outline-primary">ดูทั้งหมด</a>
+            </div>
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbiI1pyB6yiF6uBnToIuJ1LOW_wHf95Tdy_Q&s" alt="iPhone 15" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-success text-white">ใหม่</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">Apple</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">iPhone 15 Pro Max</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿48,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://www.abshop.in.th/wp-content/uploads/2024/05/Galaxy-Z-Fold5-5G-ICY-BLUE-LIGHT-BLUE-06.jpg" alt="Galaxy Z Fold 5" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-success text-white">ใหม่</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">Samsung</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">Galaxy Z Fold 5</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿59,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://oasis.opstatics.com/content/dam/oasis/page/2023/na/oneplus-11/specs/green-img.png" alt="OnePlus 11" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-success text-white">ใหม่</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">OnePlus</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">OnePlus 11</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿27,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="product-card card h-100 shadow-sm hover-elevate">
+                        <a href="#">
+                            <img src="https://www.alottechs.com/wp-content/uploads/2025/01/vivo-X90-Pro-5g-Black.webp" alt="Vivo X90" class="card-img-top p-3">
+                        </a>
+                        <div class="product-badge bg-success text-white">ใหม่</div>
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="product-brand text-muted small mb-1">Vivo</h6>
+                            <h5 class="product-title card-title mb-1">
+                                <a href="#" class="text-decoration-none text-dark">Vivo X90 Pro+</a>
+                            </h5>
+                            <div class="my-2">
+                                <span class="product-price fw-bold">฿32,900</span>
+                            </div>
+                            <div class="mt-auto pt-3">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-shopping-cart me-2"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="feature-box text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-truck fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">จัดส่งฟรี</h5>
+                        <p class="text-muted mb-0">สำหรับคำสั่งซื้อ 3,000 บาทขึ้นไป</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-box text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-undo fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">คืนสินค้าได้ 30 วัน</h5>
+                        <p class="text-muted mb-0">รับประกันคืนเงิน</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-box text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">ชำระเงินปลอดภัย</h5>
+                        <p class="text-muted mb-0">การชำระเงินที่ปลอดภัย 100%</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-box text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-headset fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold">บริการ 24/7</h5>
+                        <p class="text-muted mb-0">พร้อมให้คำปรึกษาตลอด 24 ชั่วโมง</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

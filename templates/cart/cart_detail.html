@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}ตะกร้าสินค้า - โมบายสโตร์{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">ตะกร้าสินค้า</h2>
+    
+    {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" colspan="2">สินค้า</th>
+                                        <th scope="col" class="text-center">ราคา</th>
+                                        <th scope="col" class="text-center">จำนวน</th>
+                                        <th scope="col" class="text-end">รวม</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in cart_items %}
+                                        <tr class="cart-item animate__animated animate__fadeIn">
+                                            <td style="width: 100px;">
+                                                {% if item.product.image %}
+                                                    <a href="{{ item.product.get_absolute_url }}">
+                                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded">
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ item.product.get_absolute_url }}" class="text-decoration-none text-dark fw-bold">{{ item.product.name }}</a>
+                                                <div class="text-muted small">{{ item.product.brand.name }}</div>
+                                            </td>
+                                            <td class="text-center">
+                                                {% if item.product.sale_price %}
+                                                    <span class="fw-bold">฿{{ item.product.sale_price }}</span>
+                                                    <div class="text-muted text-decoration-line-through small">฿{{ item.product.price }}</div>
+                                                {% else %}
+                                                    <span class="fw-bold">฿{{ item.product.price }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center" style="width: 120px;">
+                                                <form method="POST" action="{% url 'update_cart' item.id %}" class="d-flex justify-content-center">
+                                                    {% csrf_token %}
+                                                    <div class="input-group input-group-sm" style="width: 100px;">
+                                                        <button class="btn btn-outline-secondary qty-btn" type="button" onclick="decrementQty(this)">-</button>
+                                                        <input type="number" class="form-control text-center qty-input" name="quantity" value="{{ item.quantity }}" min="1" max="10" onchange="this.form.submit()">
+                                                        <button class="btn btn-outline-secondary qty-btn" type="button" onclick="incrementQty(this)">+</button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                            <td class="text-end fw-bold">฿{{ item.get_cost }}</td>
+                                            <td class="text-end">
+                                                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'product_list' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i> เลือกซื้อสินค้าต่อ
+                    </a>
+                    <a href="{% url 'checkout' %}" class="btn btn-primary">
+                        ชำระเงิน <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">สรุปรายการสั่งซื้อ</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>ราคารวม</span>
+                            <span class="fw-bold">฿{{ cart.get_total_price }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>ค่าจัดส่ง</span>
+                            <span class="fw-bold">ฟรี</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="fw-bold">ยอดรวมทั้งสิ้น</span>
+                            <span class="fw-bold fs-5">฿{{ cart.get_total_price }}</span>
+                        </div>
+                        <div class="d-grid">
+                            <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg">
+                                ดำเนินการชำระเงิน
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">โค้ดส่วนลด</h6>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="กรอกโค้ดส่วนลด">
+                            <button class="btn btn-outline-primary" type="button">ใช้โค้ด</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+            <h3>ตะกร้าสินค้าของคุณว่างเปล่า</h3>
+            <p class="text-muted">คุณยังไม่มีสินค้าในตะกร้า กรุณาเลือกซื้อสินค้าก่อน</p>
+            <a href="{% url 'product_list' %}" class="btn btn-primary mt-3">เลือกซื้อสินค้า</a>
+        </div>
+    {% endif %}
+</div>
+
+{% block extra_js %}
+<script>
+    function decrementQty(button) {
+        const input = button.nextElementSibling;
+        let currentVal = parseInt(input.value);
+        if (currentVal > 1) {
+            input.value = currentVal - 1;
+            input.form.submit();
+        }
+    }
+    
+    function incrementQty(button) {
+        const input = button.previousElementSibling;
+        let currentVal = parseInt(input.value);
+        if (currentVal < 10) {
+            input.value = currentVal + 1;
+            input.form.submit();
+        }
+    }
+</script>
+{% endblock %}
+
+{% endblock %}

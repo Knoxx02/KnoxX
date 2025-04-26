@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}ประวัติการสั่งซื้อ - โมบายสโตร์{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">ประวัติการสั่งซื้อ</h2>
+    
+    {% if orders %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">เลขที่คำสั่งซื้อ</th>
+                                <th scope="col">วันที่</th>
+                                <th scope="col">สินค้า</th>
+                                <th scope="col">ยอดรวม</th>
+                                <th scope="col">สถานะ</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr class="animate__animated animate__fadeIn">
+                                    <td><strong>#{{ order.id }}</strong></td>
+                                    <td>{{ order.created_at|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-secondary rounded-pill me-2">{{ order.items.count }}</span>
+                                            {% with first_item=order.items.first %}
+                                                {{ first_item.product.name }}
+                                                {% if order.items.count > 1 %}
+                                                    <span class="ms-1 text-muted">และอีก {{ order.items.count|add:"-1" }} รายการ</span>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </div>
+                                    </td>
+                                    <td class="fw-bold">฿{{ order.get_total_cost }}</td>
+                                    <td>
+                                        {% if order.status == 'pending' %}
+                                            <span class="badge bg-warning text-dark">รอดำเนินการ</span>
+                                        {% elif order.status == 'processing' %}
+                                            <span class="badge bg-info text-dark">กำลังดำเนินการ</span>
+                                        {% elif order.status == 'shipped' %}
+                                            <span class="badge bg-primary">จัดส่งแล้ว</span>
+                                        {% elif order.status == 'delivered' %}
+                                            <span class="badge bg-success">จัดส่งเรียบร้อย</span>
+                                        {% elif order.status == 'cancelled' %}
+                                            <span class="badge bg-danger">ยกเลิก</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#orderModal-{{ order.id }}">
+                                            รายละเอียด
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- Order Detail Modal -->
+                                <div class="modal fade" id="orderModal-{{ order.id }}" tabindex="-1" aria-labelledby="orderModalLabel-{{ order.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="orderModalLabel-{{ order.id }}">คำสั่งซื้อ #{{ order.id }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row mb-4">
+                                                    <div class="col-md-6 mb-3 mb-md-0">
+                                                        <h6>ข้อมูลการจัดส่ง</h6>
+                                                        <p class="mb-1">{{ order.full_name }}</p>
+                                                        <p class="mb-1">{{ order.address }}</p>
+                                                        <p class="mb-1">{{ order.city }}, {{ order.postal_code }}</p>
+                                                        <p class="mb-1">{{ order.phone }}</p>
+                                                        <p class="mb-0">{{ order.email }}</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6>ข้อมูลคำสั่งซื้อ</h6>
+                                                        <p class="mb-1">วันที่สั่งซื้อ: {{ order.created_at|date:"d/m/Y H:i" }}</p>
+                                                        <p class="mb-1">สถานะ: 
+                                                            {% if order.status == 'pending' %}
+                                                                <span class="badge bg-warning text-dark">รอดำเนินการ</span>
+                                                            {% elif order.status == 'processing' %}
+                                                                <span class="badge bg-info text-dark">กำลังดำเนินการ</span>
+                                                            {% elif order.status == 'shipped' %}
+                                                                <span class="badge bg-primary">จัดส่งแล้ว</span>
+                                                            {% elif order.status == 'delivered' %}
+                                                                <span class="badge bg-success">จัดส่งเรียบร้อย</span>
+                                                            {% elif order.status == 'cancelled' %}
+                                                                <span class="badge bg-danger">ยกเลิก</span>
+                                                            {% endif %}
+                                                        </p>
+                                                        <p class="mb-0">ยอดรวม: <span class="fw-bold">฿{{ order.get_total_cost }}</span></p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <h6 class="mb-3">รายการสินค้า</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>สินค้า</th>
+                                                                <th class="text-center">ราคา</th>
+                                                                <th class="text-center">จำนวน</th>
+                                                                <th class="text-end">รวม</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for item in order.items.all %}
+                                                                <tr>
+                                                                    <td>{{ item.product.name }}</td>
+                                                                    <td class="text-center">฿{{ item.price }}</td>
+                                                                    <td class="text-center">{{ item.quantity }}</td>
+                                                                    <td class="text-end">฿{{ item.get_cost }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                            <tr>
+                                                                <td colspan="3" class="text-end fw-bold">ยอดรวมทั้งสิ้น</td>
+                                                                <td class="text-end fw-bold">฿{{ order.get_total_cost }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                {% if order.status == 'pending' %}
+                                                    <button type="button" class="btn btn-danger me-auto">ยกเลิกคำสั่งซื้อ</button>
+                                                {% endif %}
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-bag fa-4x text-muted mb-3"></i>
+            <h3>คุณยังไม่มีประวัติการสั่งซื้อ</h3>
+            <p class="text-muted">เมื่อคุณทำการสั่งซื้อสินค้า รายการสั่งซื้อของคุณจะปรากฏที่นี่</p>
+            <a href="{% url 'product_list' %}" class="btn btn-primary mt-3">เลือกซื้อสินค้าเลย</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

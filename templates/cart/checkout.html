@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}ชำระเงิน - โมบายสโตร์{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">ชำระเงิน</h2>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">ข้อมูลการจัดส่ง</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="checkout-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {{ form.full_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.email|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.phone|as_crispy_field }}
+                            </div>
+                            <div class="col-12 mb-3">
+                                {{ form.address|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.city|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.postal_code|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-4 mb-4">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">วิธีการชำระเงิน</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_method_1" value="bank_transfer" checked>
+                                    <label class="form-check-label" for="payment_method_1">
+                                        <i class="fas fa-university me-2"></i> โอนเงินผ่านธนาคาร
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_method_2" value="credit_card">
+                                    <label class="form-check-label" for="payment_method_2">
+                                        <i class="fas fa-credit-card me-2"></i> บัตรเครดิต/เดบิต
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_method_3" value="promptpay">
+                                    <label class="form-check-label" for="payment_method_3">
+                                        <i class="fas fa-qrcode me-2"></i> พร้อมเพย์
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_method_4" value="cash_on_delivery">
+                                    <label class="form-check-label" for="payment_method_4">
+                                        <i class="fas fa-money-bill-wave me-2"></i> เก็บเงินปลายทาง
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary btn-lg">สั่งซื้อสินค้า</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4 sticky-top" style="top: 100px; z-index: 99;">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">สรุปคำสั่งซื้อ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="checkout-items mb-3">
+                        {% for item in cart_items %}
+                            <div class="d-flex align-items-center mb-3">
+                                <div style="width: 60px; height: 60px;" class="me-3">
+                                    {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-fluid rounded">
+                                    {% endif %}
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">{{ item.product.name }}</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">{{ item.quantity }} x 
+                                        {% if item.product.sale_price %}
+                                            ฿{{ item.product.sale_price }}
+                                        {% else %}
+                                            ฿{{ item.product.price }}
+                                        {% endif %}
+                                        </small>
+                                        <span class="fw-bold">฿{{ item.get_cost }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>ราคารวม</span>
+                        <span>฿{{ cart.get_total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>ค่าจัดส่ง</span>
+                        <span>ฟรี</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>ส่วนลด</span>
+                        <span>-฿0</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-0">
+                        <span class="fw-bold">ยอดรวมทั้งสิ้น</span>
+                        <span class="fw-bold fs-5">฿{{ cart.get_total_price }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

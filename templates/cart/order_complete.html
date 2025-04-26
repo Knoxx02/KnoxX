@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}สั่งซื้อสำเร็จ - โมบายสโตร์{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success fa-5x"></i>
+                    </div>
+                    <h2 class="mb-4">ขอบคุณสำหรับคำสั่งซื้อ!</h2>
+                    <p class="lead mb-5">คำสั่งซื้อหมายเลข #{{ order.id }} ของคุณได้รับการยืนยันแล้ว</p>
+                    
+                    <div class="alert alert-info mb-4">
+                        <p class="mb-0">เราได้ส่งอีเมลยืนยันคำสั่งซื้อไปที่ <strong>{{ order.email }}</strong> แล้ว</p>
+                    </div>
+                    
+                    <div class="order-details mb-4">
+                        <h5 class="mb-3">รายละเอียดคำสั่งซื้อ</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="border rounded p-3 h-100">
+                                    <h6 class="text-muted mb-2">ข้อมูลการจัดส่ง</h6>
+                                    <p class="mb-1">{{ order.full_name }}</p>
+                                    <p class="mb-1">{{ order.address }}</p>
+                                    <p class="mb-1">{{ order.city }}, {{ order.postal_code }}</p>
+                                    <p class="mb-1">{{ order.phone }}</p>
+                                    <p class="mb-0">{{ order.email }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="border rounded p-3 h-100">
+                                    <h6 class="text-muted mb-2">สรุปคำสั่งซื้อ</h6>
+                                    <p class="mb-1">วันที่สั่งซื้อ: {{ order.created_at|date:"d/m/Y H:i" }}</p>
+                                    <p class="mb-1">สถานะการสั่งซื้อ: <span class="badge bg-warning">{{ order.get_status_display }}</span></p>
+                                    <p class="mb-1">จำนวนสินค้า: {{ order.items.count }} รายการ</p>
+                                    <p class="mb-0">ยอดรวม: <span class="fw-bold">฿{{ order.get_total_cost }}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items mb-4">
+                        <h5 class="mb-3">รายการสินค้า</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>สินค้า</th>
+                                        <th class="text-center">ราคา</th>
+                                        <th class="text-center">จำนวน</th>
+                                        <th class="text-end">รวม</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                        <tr>
+                                            <td>{{ item.product.name }}</td>
+                                            <td class="text-center">฿{{ item.price }}</td>
+                                            <td class="text-center">{{ item.quantity }}</td>
+                                            <td class="text-end">฿{{ item.get_cost }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="3" class="text-end fw-bold">ยอดรวมทั้งสิ้น</td>
+                                        <td class="text-end fw-bold">฿{{ order.get_total_cost }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg">กลับไปหน้าแรก</a>
+                        <a href="{% url 'order_history' %}" class="btn btn-outline-primary btn-lg">ดูประวัติการสั่งซื้อ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
